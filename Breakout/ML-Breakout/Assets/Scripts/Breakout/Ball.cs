@@ -16,6 +16,8 @@ public class Ball : MonoBehaviour
 
     private bool hitPaddle;
 
+    public Vector2 dir { get; private set; } // Ball direction for NN input
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +28,8 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        dir = rb.velocity.normalized;
+
         if(Input.GetKeyDown(KeyCode.Space))
         {
             ResetBall();
