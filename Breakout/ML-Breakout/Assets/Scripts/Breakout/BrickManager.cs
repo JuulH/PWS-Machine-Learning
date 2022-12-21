@@ -14,6 +14,8 @@ public class BrickManager : MonoBehaviour
 
     [SerializeField] private Color[] brickColors;
 
+    [SerializeField] private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +25,10 @@ public class BrickManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(transform.childCount <= 0)
+        {
+            gameManager.OnWin();
+        }
     }
 
     public void ClearBricks()
@@ -74,7 +79,7 @@ public class BrickManager : MonoBehaviour
             {
                 GameObject newBrick = Instantiate(brick, new Vector2(currentX, currentY), Quaternion.identity, transform);
                 SpriteRenderer brickSprite = newBrick.GetComponent<SpriteRenderer>();
-                brickSprite.color = brickColors[i];
+                brickSprite.color = brickColors[i]; // Assign brick color
                 currentX += brickWidth;
             }
             currentY -= brickHeight;

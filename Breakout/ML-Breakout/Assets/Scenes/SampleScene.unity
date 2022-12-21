@@ -304,6 +304,7 @@ MonoBehaviour:
   - {r: 0.84313726, g: 0.30588236, b: 0.03529412, a: 1}
   - {r: 0.43137255, g: 0.05490196, b: 0.039215688, a: 1}
   - {r: 0.5377358, g: 0, b: 0.348156, a: 1}
+  gameManager: {fileID: 922346410}
 --- !u!4 &153387915
 Transform:
   m_ObjectHideFlags: 0
@@ -650,7 +651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7375579743d7e4fbe767d54a56ea2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 9
   xWidth: 4.625
   startPos: {x: 0, y: -4}
 --- !u!61 &891670414

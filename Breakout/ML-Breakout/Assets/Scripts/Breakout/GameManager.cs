@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     private float score;
     private float multiplier;
+    private float time;
 
     [SerializeField] private TMP_Text scoreText;
 
@@ -25,7 +26,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scoreText.text = string.Format("Score: {0}", score.ToString());
+        scoreText.text = string.Format("Score: {0}\nTime: {1:0}", score.ToString(), time);
+        time += Time.deltaTime;
     }
 
     public void ScoreUp()
@@ -51,5 +53,11 @@ public class GameManager : MonoBehaviour
         multiplier = 1;
         paddle.ResetPaddle();
         ball.ResetBall();
+        time = 0;
+    }
+
+    public void OnWin()
+    {
+        Debug.Log("You won!");
     }
 }
