@@ -7,7 +7,7 @@ public class BirdController : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     private Rigidbody2D rb;
 
-    [SerializeField] private bool dead = false;
+    [SerializeField] public bool dead = false;
 
     [SerializeField] private GameObject passCheck;
 
@@ -18,18 +18,6 @@ public class BirdController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         dead = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!dead)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Jump();
-            }
-        }
     }
 
     public void Jump()

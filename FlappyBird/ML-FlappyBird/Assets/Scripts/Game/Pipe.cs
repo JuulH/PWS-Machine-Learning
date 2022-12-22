@@ -8,6 +8,7 @@ public class Pipe : MonoBehaviour
     [SerializeField] private float speed = 5f;
     private bool wasVisible;
     private SpriteRenderer childSprite;
+    public float pipeMargin;
 
     // Start is called before the first frame update
     void Start()
@@ -36,8 +37,18 @@ public class Pipe : MonoBehaviour
         }
     }
 
-    public void increaseSpeed(float increase)
+    public void IncreaseSpeed(float increase)
     {
         speed += increase;
+    }
+
+    public void SetMargin(float margin)
+    {
+        pipeMargin = margin;
+        Transform topPipe = transform.GetChild(0);
+        Transform bottomPipe = transform.GetChild(0);
+        float pipeSizeY = topPipe.GetComponent<SpriteRenderer>().bounds.size.y;
+        topPipe.position = new Vector2(0, margin / 2 +  pipeSizeY / 2);
+        bottomPipe.position = new Vector2(0, -margin / 2 + -pipeSizeY / 2);
     }
 }
