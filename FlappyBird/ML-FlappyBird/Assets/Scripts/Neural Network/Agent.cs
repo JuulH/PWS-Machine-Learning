@@ -48,7 +48,7 @@ public class Agent : MonoBehaviour
             float[] output = network.FeedForward(inputs);
             jumpActivation = (float)System.Math.Tanh(output[0]);
 
-            Debug.Log(output[0] + " - " + jumpActivation);
+            //Debug.Log(output[0] + " - " + jumpActivation);
 
             if (jumpActivation > 0)
             {
@@ -67,7 +67,7 @@ public class Agent : MonoBehaviour
     {
         this.network = nn;
         this.id = i;
-        //bird.transform.name = "Bird " + i;
+        gameObject.transform.name = "Bird " + i;
     }
 
     public void SetInput(int i, float value)

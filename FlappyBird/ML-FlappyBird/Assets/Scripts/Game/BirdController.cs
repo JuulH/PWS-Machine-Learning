@@ -28,12 +28,20 @@ public class BirdController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         dead = true;
+        this.gameObject.SetActive(false);
     }
 
     private void StartGame()
     {
         rb.simulated = true;
         pipeSpawner.SetActive(true);
+    }
+
+    public void ResetBird()
+    {
+        transform.position = new Vector2(0, 0);
+        transform.rotation = Quaternion.identity;
+        dead = false;
     }
 
 }

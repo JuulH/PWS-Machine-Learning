@@ -15,28 +15,31 @@ public class PipeSpawner : MonoBehaviour
 
     [SerializeField] private float margin = 4.25f;
 
-    private List<Pipe> activePipes;
+    private bool spawning;
 
     private void Start()
     {
-        activePipes = new List<Pipe>();
         timer = spawnTime + 1f;
+        spawning = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (timer > spawnTime)
+        if (spawning)
         {
-            SpawnPipe(pipePrefab, margin, height);
+            if (timer > spawnTime)
+            {
+                SpawnPipe(pipePrefab, margin, height);
 
-            speedIncrease += .1f;
-            spawnTime -= spawnDecrease;
-            spawnDecrease *= .95f;
+                speedIncrease += .1f;
+                spawnTime -= spawnDecrease;
+                spawnDecrease *= .95f;
 
-            timer = 0;
+                timer = 0;
+            }
+            timer += Time.deltaTime;
         }
-        timer += Time.deltaTime;
     }
 
     private void SpawnPipe(GameObject pipePrefab, float margin, float height)
@@ -46,6 +49,25 @@ public class PipeSpawner : MonoBehaviour
         newPipe.transform.position = transform.position + new Vector3(0, Random.Range(-height, height) + .5f, 0);
         newPipe.IncreaseSpeed(speedIncrease);
         Destroy(newPipe.gameObject, 6);
+    }
+
+    // Destroy all active pipes
+    public void Clear()
+    {
+        spawning = false;
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void SetActive()
+    {
+        spawnTime = 1.75f;
+        timer = spawnTime;
+        spawnDecrease = .05f;
+        speedIncrease = .1f;
+        spawning = true;
     }
 
     public (float, float) GetPipeInput()

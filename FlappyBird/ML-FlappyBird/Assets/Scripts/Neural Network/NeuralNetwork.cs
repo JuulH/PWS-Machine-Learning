@@ -6,21 +6,19 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
 {
 
     private int[] layers;
-    private float[][] neurons; // Jagged array
+    private float[][] neurons;
     // [LAYER][NODE]
-    // bv [[1,2,3,4] INPUT, [1,2,3,4] HIDDEN, [1,2,3] HIDDEN, [1,2] OUTPUT]]
 
     private float[][] biases;
     // [LAYER][NODE]
-    // bv [LAYER - 1 [NEURON - 1,2,3,4]]
 
-    private float[][][] weights; // 3 dimensional jagged array
+    private float[][][] weights;
     // [LAYER][NODE][WEIGHT/PREVNEURON]
-    // bv [[LAYER 1 [NEURON 1 - 1,2,3,4] [NEURON 2 - 1,2,3,4] [NEURON 3 - 1,2,3,4]]
 
     private int[] activations;
 
     private float fitness;
+    private int id;
 
     public NeuralNetwork(int[] layers)
     {
@@ -130,9 +128,24 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         return neurons[neurons.Length - 1];
     }
 
-    public void SetFitness(float fIn)
+    public void SetFitness(float fitness)
     {
-        fitness = fIn;
+        this.fitness = fitness;
+    }
+    
+    public float GetFitness()
+    {
+        return this.fitness;
+    }
+
+    public void SetID(int id)
+    {
+        this.id = id;
+    }
+
+    public int GetID()
+    {
+        return this.id;
     }
 
     public void SetInput(int i, float value)
