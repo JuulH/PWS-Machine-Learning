@@ -615,6 +615,7 @@ MonoBehaviour:
   pipe: {fileID: 1115387664}
   cameraFollow: {fileID: 0}
   trackFittest: 0
+  timeScale: 1
 --- !u!4 &1952236204
 Transform:
   m_ObjectHideFlags: 0

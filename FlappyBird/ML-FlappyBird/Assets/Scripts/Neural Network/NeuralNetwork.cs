@@ -164,21 +164,21 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         if (other == null)
             return 1;
         if (fitness > other.fitness)
-            return 1;
-        else if (fitness < other.fitness)
             return -1;
+        else if (fitness < other.fitness)
+            return 1;
         else
             return 0;
     }
 
     // Deep copy of neural network, ensures serialization
-    public NeuralNetwork copy(NeuralNetwork nn)
+    public void Copy(NeuralNetwork nn)
     {
         for (int i = 0; i < biases.Length; i++)
         {
             for (int j = 0; j < biases[i].Length; j++)
             {
-                nn.biases[i][j] = biases[i][j];
+                this.biases[i][j] = nn.biases[i][j];
             }
         }
         for (int i = 0; i < weights.Length; i++)
@@ -187,11 +187,10 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
             {
                 for (int k = 0; k < weights[i][j].Length; k++)
                 {
-                    nn.weights[i][j][k] = weights[i][j][k];
+                    this.weights[i][j][k] = nn.weights[i][j][k];
                 }
             }
         }
-        return nn;
     }
 
     // Simple mutation to biases and weights

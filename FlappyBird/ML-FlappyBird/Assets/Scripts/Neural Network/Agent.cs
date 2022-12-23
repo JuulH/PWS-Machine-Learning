@@ -12,29 +12,33 @@ public class Agent : MonoBehaviour
 
     float jumpActivation;
 
-    private BirdController bird;
-
     private float timeAlive;
 
     private SpriteRenderer body;
     private LineRenderer visionLine;
 
+    // Bird
+    [SerializeField] private float jumpForce = 5f;
+    private Rigidbody2D rb;
+    [SerializeField] public bool dead = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        bird = GetComponent<BirdController>();
+        rb = GetComponent<Rigidbody2D>();
+        dead = false;
         timeAlive = 0f;
 
-        body = bird.GetComponentsInChildren<SpriteRenderer>()[1];
+        body = GetComponentsInChildren<SpriteRenderer>()[1];
         body.color = Random.ColorHSV();
 
-        visionLine = bird.GetComponent<LineRenderer>();
+        visionLine = GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!bird.dead)
+        if (!dead)
         {
             inputs[0] = transform.position.y; // Bird Y
             inputs[1] = network.GetInput(1);
@@ -52,7 +56,7 @@ public class Agent : MonoBehaviour
 
             if (jumpActivation > 0)
             {
-                bird.Jump();
+                Jump();
             }
 
             timeAlive += Time.deltaTime;
@@ -73,5 +77,24 @@ public class Agent : MonoBehaviour
     public void SetInput(int i, float value)
     {
         inputs[i] = value;
+    }
+
+    public void Jump()
+    {
+        rb.velocity = Vector2.up * jumpForce;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        dead = true;
+        this.gameObject.SetActive(false);
+    }
+
+    public void ResetBird()
+    {
+        transform.position = new Vector2(0, 0);
+        transform.rotation = Quaternion.identity;
+        dead = false;
+        timeAlive = 0f;
     }
 }

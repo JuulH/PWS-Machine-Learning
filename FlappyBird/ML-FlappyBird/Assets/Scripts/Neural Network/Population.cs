@@ -34,6 +34,8 @@ public class Population : MonoBehaviour
     [SerializeField] private CameraFollow cameraFollow;
     [SerializeField] private bool trackFittest;
 
+    [SerializeField] private float timeScale;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +46,18 @@ public class Population : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            timeScale *= 2;
+            Time.timeScale = timeScale;
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            timeScale /= 2;
+            Time.timeScale = timeScale;
+        }
+
         agents = GameObject.FindGameObjectsWithTag("Agent");
         alive = agents.Length;
 
@@ -51,7 +65,7 @@ public class Population : MonoBehaviour
         {
             if(alive <= 0)
             {
-                // Sort networks by fitness ascending
+                // Sort networks by fitness descending
                 networks.Sort();
                 Debug.Log(networks[0].GetFitness());
                 pipe.Clear();
@@ -106,8 +120,8 @@ public class Population : MonoBehaviour
         }
         foreach(NeuralNetwork network in networks)
         {
-            BirdController bird = GameObject.FindGameObjectsWithTag("Agent")[network.GetID()].GetComponent<BirdController>();
-            Debug.Log(bird + " - " + network.GetID());
+            Agent bird = birds[network.GetID()].GetComponent<Agent>();
+            // Debug.Log(bird + " - " + network.GetID());
             bird.ResetBird();
         }
     }
@@ -118,14 +132,18 @@ public class Population : MonoBehaviour
         int crossoverIndex = eliteIndex + Mathf.RoundToInt(networks.Count * crossoverPercentage);
         int mutationIndex = crossoverIndex + Mathf.RoundToInt(networks.Count * mutationPercentage);
 
-        Debug.LogFormat("Elites: {0} Crossover: {1} Mutation: {2}", eliteIndex, crossoverIndex, mutationIndex);
+        // Debug.LogFormat("Elites: {0} Crossover: {1} Mutation: {2}", eliteIndex, crossoverIndex, mutationIndex);
 
         for(int i = 0; i < networks.Count; i++)
         {
             if (i < eliteIndex) continue; // Save top networks
 
+            int id = networks[i].GetID();
+
             // Mutate remaining as copies of top networks
-            networks[i] = networks[i - eliteIndex];
+            // networks[i] = networks[(i - eliteIndex) % eliteIndex];
+            networks[i].Copy(networks[(i - eliteIndex) % eliteIndex]);
+            networks[i].SetID(id);
             networks[i].Mutate(0, .2f);
         }
     }
