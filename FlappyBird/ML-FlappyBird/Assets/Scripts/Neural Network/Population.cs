@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Population : MonoBehaviour
 {
@@ -15,10 +16,13 @@ public class Population : MonoBehaviour
 
     [SerializeField] private GameObject agentPrefab;
 
-    [SerializeField] private float highScore;
-    [SerializeField] private float highScoreCurrentGen;
-    [SerializeField] private float avgScoreCurrentGen;
-    [SerializeField] private float lowScoreCurrentGen;
+    [SerializeField] private TMP_Text statsText;
+    [SerializeField] private float recordFitness;
+    [SerializeField] private float lastFitness;
+    [SerializeField] private float averageFitness;
+    [SerializeField] private int highScore;
+    [SerializeField] private int currentScore;
+    public bool updateScore;
 
     // Neural network config
     [SerializeField] private int[] layers = new int[] { 6, 8, 8, 1 };
@@ -61,19 +65,37 @@ public class Population : MonoBehaviour
         agents = GameObject.FindGameObjectsWithTag("Agent");
         alive = agents.Length;
 
+        UpdateStats();
+
         if(training)
         {
             if(alive <= 0)
             {
                 // Sort networks by fitness descending
                 networks.Sort();
-                Debug.Log(networks[0].GetFitness());
+                lastFitness = networks[0].GetFitness();
+
+                if (lastFitness > recordFitness) recordFitness = lastFitness;
+
+
+                float tally = 0f;
+                foreach (NeuralNetwork network in networks)
+                {
+                    tally += network.GetFitness();
+                }
+                averageFitness = tally / populationSize;
+
+                Debug.LogFormat("Generation {0} - Fitness: {1}, Average Fitness: {2}, Score: {3}", generation, lastFitness, averageFitness, currentScore);
+
                 pipe.Clear();
 
                 MutateNetworks();
                 ResetNetworks();
                 pipe.SetActive();
 
+                // Data
+                currentScore = 0;
+                generation++;
             } else
             {
                 foreach(NeuralNetwork net in networks)
@@ -91,6 +113,36 @@ public class Population : MonoBehaviour
         }
 
         //cameraFollow.target = Vector2.zero;
+    }
+
+    private void UpdateStats()
+    {
+        statsText.text = string.Format(
+            "Generation: {0}\n" +
+            "Highest Fitness: {1}\n" +
+            "Last Fitness: {2}\n" +
+            "Average Fitness: {3}\n" +
+            "Highest Score: {4}\n" +
+            "Current Score: {5}\n" +
+            "Alive: {6}/{7}\n" +
+            "Timescale: {8}x",
+            generation, recordFitness, lastFitness, averageFitness, highScore, currentScore, alive, populationSize, timeScale);
+    }
+
+    public void ScoreUp()
+    {
+        if (updateScore)
+        {
+            currentScore++;
+            if (currentScore > highScore) highScore = currentScore;
+            updateScore = false;
+        }
+    }
+
+    public void SetScore(int score)
+    {
+        currentScore = score;
+        if (currentScore > highScore) highScore = currentScore;
     }
 
     // Initialize network with random weights and biases

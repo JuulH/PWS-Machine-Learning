@@ -22,9 +22,13 @@ public class Agent : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] public bool dead = false;
 
+    private Population population;
+    private int score;
+
     // Start is called before the first frame update
     void Start()
     {
+        score = 0;
         rb = GetComponent<Rigidbody2D>();
         dead = false;
         timeAlive = 0f;
@@ -33,6 +37,8 @@ public class Agent : MonoBehaviour
         body.color = Random.ColorHSV();
 
         visionLine = GetComponent<LineRenderer>();
+
+        population = GameObject.FindGameObjectWithTag("Population").GetComponent<Population>();
     }
 
     // Update is called once per frame
@@ -60,7 +66,7 @@ public class Agent : MonoBehaviour
             }
 
             timeAlive += Time.deltaTime;
-            network.SetFitness(timeAlive);
+            network.SetFitness(timeAlive + score);
         } else
         {
             visionLine.enabled = false;
@@ -90,11 +96,21 @@ public class Agent : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Pipe"))
+        {
+            score++;
+            population.SetScore(score);
+        }
+    }
+
     public void ResetBird()
     {
         transform.position = new Vector2(0, 0);
         transform.rotation = Quaternion.identity;
         dead = false;
         timeAlive = 0f;
+        score = 0;
     }
 }
