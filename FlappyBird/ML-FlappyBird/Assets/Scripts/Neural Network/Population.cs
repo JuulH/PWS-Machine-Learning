@@ -68,7 +68,7 @@ public class Population : MonoBehaviour
             Time.timeScale = timeScale;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             trackFittest = !trackFittest;
             if (trackFittest)

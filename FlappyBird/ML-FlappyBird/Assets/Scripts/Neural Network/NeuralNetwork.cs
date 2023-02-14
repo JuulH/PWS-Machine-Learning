@@ -5,14 +5,14 @@ using System;
 public class NeuralNetwork : IComparable<NeuralNetwork>
 {
 
-    private int[] layers;
-    private float[][] neurons;
+    public int[] layers;
+    public float[][] neurons;
     // [LAYER][NODE]
 
-    private float[][] biases;
+    public float[][] biases;
     // [LAYER][NODE]
 
-    private float[][][] weights;
+    public float[][][] weights;
     // [LAYER][NODE][WEIGHT/PREVNEURON]
 
     private int[] activations;

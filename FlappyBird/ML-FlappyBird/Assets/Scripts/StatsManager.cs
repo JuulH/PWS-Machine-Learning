@@ -9,17 +9,14 @@ public class StatsManager : MonoBehaviour
     [SerializeField] private string[] columns;
 
     [SerializeField] private string runCountFile;
+    [SerializeField] private string jsonFile;
+
+    private ExportNetwork exportNN;
 
     // Start is called before the first frame update
     void Start()
     {
         fileName = Application.dataPath + "/Data/" + fileName + ".csv";
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public int GetRuns()

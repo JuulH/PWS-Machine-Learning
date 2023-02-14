@@ -2,18 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BirdController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float jumpForce = 5f;
     private Rigidbody2D rb;
 
     [SerializeField] public bool dead = false;
 
+    [SerializeField] private GameObject passCheck;
+
+    [SerializeField] private GameObject pipeSpawner;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         dead = false;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
     }
 
     public void Jump()
@@ -30,6 +42,7 @@ public class BirdController : MonoBehaviour
     private void StartGame()
     {
         rb.simulated = true;
+        pipeSpawner.SetActive(true);
     }
 
     public void ResetBird()
