@@ -36,7 +36,7 @@ public class Agent : MonoBehaviour
         body = GetComponentsInChildren<SpriteRenderer>()[1];
         body.color = Random.ColorHSV();
 
-        visionLine = GetComponent<LineRenderer>();
+        visionLine = GetComponentInChildren<LineRenderer>();
 
         population = GameObject.FindGameObjectWithTag("Population").GetComponent<Population>();
     }

@@ -38,7 +38,6 @@ public class Population : MonoBehaviour
     private float mutationPercentage = 0.65f;
 
     [SerializeField] private PipeSpawner pipe;
-    [SerializeField] private CameraFollow cameraFollow;
     [SerializeField] private bool trackFittest;
 
     [SerializeField] private float timeScale;
@@ -57,7 +56,7 @@ public class Population : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             timeScale *= 2;
             Time.timeScale = timeScale;
@@ -69,6 +68,27 @@ public class Population : MonoBehaviour
             Time.timeScale = timeScale;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            trackFittest = !trackFittest;
+            if (trackFittest)
+            {
+                foreach (GameObject bird in birds)
+                {
+                    if (!bird.activeInHierarchy) continue;
+
+                    bird.transform.GetChild(0).gameObject.SetActive(false);
+                    birds[networks[0].GetID()].transform.GetChild(0).gameObject.SetActive(true);
+                }
+            } else
+            {
+                foreach (GameObject bird in birds)
+                {
+                    bird.transform.GetChild(0).gameObject.SetActive(true);
+                }
+            }
+        }
+
         agents = GameObject.FindGameObjectsWithTag("Agent");
         alive = agents.Length;
 
@@ -76,6 +96,21 @@ public class Population : MonoBehaviour
 
         if(training)
         {
+            if(trackFittest)
+            {
+                if (!birds[networks[0].GetID()].activeInHierarchy)
+                {
+                    foreach (GameObject bird in birds)
+                    {
+                        if (bird.activeInHierarchy)
+                        {
+                            bird.transform.GetChild(0).gameObject.SetActive(true);
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (alive <= 0)
             {
                 // Sort networks by fitness descending
@@ -83,7 +118,6 @@ public class Population : MonoBehaviour
                 lastFitness = networks[0].GetFitness();
 
                 if (lastFitness > recordFitness) recordFitness = lastFitness;
-
 
                 float tally = 0f;
                 foreach (NeuralNetwork network in networks)
@@ -102,6 +136,15 @@ public class Population : MonoBehaviour
                 ResetNetworks();
                 pipe.SetActive();
 
+                if (trackFittest)
+                {
+                    foreach (GameObject bird in birds)
+                    {
+                        bird.transform.GetChild(0).gameObject.SetActive(false);
+                    }
+                    birds[networks[0].GetID()].transform.GetChild(0).gameObject.SetActive(true);
+                }
+
                 // Data
                 currentScore = 0;
                 generation++;
@@ -118,13 +161,6 @@ public class Population : MonoBehaviour
                 }
             }
         }
-
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            cameraFollow.followTarget = !cameraFollow.followTarget;
-        }
-
-        //cameraFollow.target = Vector2.zero;
     }
 
     private void UpdateStats()
