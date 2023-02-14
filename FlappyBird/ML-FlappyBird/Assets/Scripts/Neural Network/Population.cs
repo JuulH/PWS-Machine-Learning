@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class Population : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class Population : MonoBehaviour
     private List<NeuralNetwork> networks;
     private List<GameObject> birds;
 
+    [SerializeField] private StatsManager stats;
+
     // Mutation
     private float elitistPercentage = 0.1f;
     private float crossoverPercentage = 0.25f;
@@ -40,11 +43,15 @@ public class Population : MonoBehaviour
 
     [SerializeField] private float timeScale;
 
+    private float runtime;
+
     // Start is called before the first frame update
     void Start()
     {
         InitNetworks();
         pipe.SetActive();
+        stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns().ToString());
+        stats.UpdateRuns();
     }
 
     // Update is called once per frame
@@ -69,7 +76,7 @@ public class Population : MonoBehaviour
 
         if(training)
         {
-            if(alive <= 0)
+            if (alive <= 0)
             {
                 // Sort networks by fitness descending
                 networks.Sort();
@@ -87,6 +94,8 @@ public class Population : MonoBehaviour
 
                 Debug.LogFormat("Generation {0} - Fitness: {1}, Average Fitness: {2}, Score: {3}", generation, lastFitness, averageFitness, currentScore);
 
+                stats.Write(new float[] {generation, lastFitness, averageFitness, currentScore, runtime});
+
                 pipe.Clear();
 
                 MutateNetworks();
@@ -96,8 +105,11 @@ public class Population : MonoBehaviour
                 // Data
                 currentScore = 0;
                 generation++;
+                runtime = 0f;
             } else
             {
+                runtime += Time.deltaTime;
+
                 foreach(NeuralNetwork net in networks)
                 {
                     (float, float) pipeInput = pipe.GetPipeInput();
