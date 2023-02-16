@@ -28,6 +28,7 @@ public class Agent : MonoBehaviour
     [SerializeField] private Vector2 startPos;
     [SerializeField] private int ctarget = 0;
     [SerializeField] private int target = 0;
+    [SerializeField] private float targetThreshold; // Max time between targets
 
     private int maxTargets = 25;
 
@@ -56,6 +57,11 @@ public class Agent : MonoBehaviour
 
         if (!dead)
         {
+            if(timeSinceTarget > targetThreshold)
+            {
+                KillAgent();
+            }
+
             for(int i = 0; i < numRays; i++)
             {
                 // Calculate the angle of the current ray
@@ -115,12 +121,17 @@ public class Agent : MonoBehaviour
         inputs[i] = value;
     }
 
+    private void KillAgent()
+    {
+        dead = true;
+        this.gameObject.SetActive(false);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Border"))
         {
-            dead = true;
-            this.gameObject.SetActive(false);
+            KillAgent();
         }
     }
 
@@ -139,16 +150,17 @@ public class Agent : MonoBehaviour
             else
             {
                 network.fitness -= 1 * multiplier;
-                timeSinceTarget = 0;
             }
 
             Debug.Log("Hit target! " + target + ", Multiplier: " + multiplier + ", Fitness: " + network.fitness);
 
+            // Completed a lap
             if (ctarget >= maxTargets)
             {
                 ctarget = 0;
                 target = 0;
                 timeAlive = 0f;
+                KillAgent();
             }
         }
     }
@@ -162,6 +174,7 @@ public class Agent : MonoBehaviour
         ctarget = 0;
         target = 0;
         dead = false;
+        network.fitness = 0;
         car.Reset();
     }
 }

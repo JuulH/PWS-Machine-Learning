@@ -196,7 +196,6 @@ public class Population : MonoBehaviour
         foreach(NeuralNetwork network in networks)
         {
             Agent car = cars[network.GetID()].GetComponent<Agent>();
-            // Debug.Log(bird + " - " + network.GetID());
             car.Reset();
         }
     }
