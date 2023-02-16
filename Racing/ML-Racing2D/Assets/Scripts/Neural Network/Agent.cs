@@ -6,17 +6,28 @@ using static System.Math;
 public class Agent : MonoBehaviour
 {
 
+    private TopDownCarController car;
     private NeuralNetwork network;
     private float[] inputs = new float[5];
     int id;
+
+    [SerializeField] private int[] layers;
 
     private float timeAlive;
 
     private SpriteRenderer body;
     [SerializeField] public bool dead = false;
 
-    private Population population;
     private int score;
+
+    private int borderLayer;
+    [SerializeField] private int numRays = 5;
+    [SerializeField] private float maxAngle = 90f;
+    private float spreadAngle;
+    [SerializeField] private LineRenderer line;
+
+    [SerializeField] private Vector2 startPos;
+
 
     // Start is called before the first frame update
     void Start()
@@ -25,50 +36,66 @@ public class Agent : MonoBehaviour
         dead = false;
         timeAlive = 0f;
 
-        body = GetComponentsInChildren<SpriteRenderer>()[1];
-        body.color = Random.ColorHSV();
+        borderLayer = LayerMask.GetMask("Border");
+        spreadAngle = maxAngle / (numRays - 1);
 
-        population = GameObject.FindGameObjectWithTag("Population").GetComponent<Population>();
+        line.positionCount = numRays * 2;
+
+        car = GetComponent<TopDownCarController>();
+        inputs = new float[numRays];
+        layers[0] = numRays;
+        network = new NeuralNetwork(layers);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            transform.position = startPos;
+            network = new NeuralNetwork(layers);
+        }
+
         if (!dead)
         {
-            // Cast a ray straight down.
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
-
-            // If it hits something...
-            if (hit.collider != null)
+            for(int i = 0; i < numRays; i++)
             {
-                // Calculate the distance from the surface and the "error" relative
-                // to the floating height.
-                float distance = Mathf.Abs(hit.point.y - transform.position.y);
-                float heightError = floatHeight - distance;
+                // Calculate the angle of the current ray
+                float angle = (-maxAngle / 2) + (i * spreadAngle);
 
-                // The force is proportional to the height error, but we remove a part of it
-                // according to the object's speed.
-                float force = liftForce * heightError - rb2D.velocity.y * damping;
+                // Calculate the direction of the current ray
+                Vector2 direction = Quaternion.Euler(0f, 0f, angle) * transform.up;
 
-                // Apply the force to the rigidbody.
-                rb2D.AddForce(Vector3.up * force);
+                // Cast the ray and draw the debug line
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, 50f, borderLayer);
+                if (hit.collider != null)
+                {
+                    Debug.DrawLine(transform.position, hit.point, Color.red);
+
+                    line.SetPosition(i * 2, transform.position);
+                    line.SetPosition(i * 2 + 1, hit.point);
+
+                    inputs[i] = hit.distance;
+                } else
+                {
+                    line.SetPosition(i * 2, transform.position);
+                    line.SetPosition(i * 2 + 1, transform.position);
+
+                    inputs[i] = 9999;
+                }
             }
 
-
-            inputs[0] = transform.position.y; // Bird Y
-            inputs[1] = network.GetInput(1);
-            inputs[2] = network.GetInput(2);
-
-            //Debug.LogFormat("0: {0} - 1: {1} - 2: {2}", inputs[0], inputs[1], inputs[2]);
-            Debug.DrawLine(transform.position, new Vector3(inputs[1], inputs[2], 0), Color.red);
+            Debug.LogFormat("0: {0} - 1: {1} - 2: {2} - 3: {3} - 4: {4}", inputs[0], inputs[1], inputs[2], inputs[3], inputs[4]);
 
             float[] output = network.FeedForward(inputs);
 
-            //Debug.Log(output[0] + " - " + jumpActivation);
+            Vector2 inputVector = new Vector2(output[0], output[1]);
+            Debug.DrawLine(transform.position, inputVector, Color.green);
+
+            car.SetInputVector(inputVector);
 
             timeAlive += Time.deltaTime;
-            network.SetFitness(timeAlive + score);
+            //network.SetFitness(timeAlive + score);
         } else
         {
             //visionLine.enabled = false;
@@ -82,7 +109,7 @@ public class Agent : MonoBehaviour
 
     public void InitAgent(NeuralNetwork nn, int i)
     {
-        this.network = nn;
+        //this.network = nn;
         this.id = i;
         gameObject.transform.name = "Bird " + i;
     }
@@ -94,8 +121,11 @@ public class Agent : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        dead = true;
-        this.gameObject.SetActive(false);
+        //dead = true;
+        //this.gameObject.SetActive(false);
+
+        transform.position = startPos;
+        network = new NeuralNetwork(layers);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -103,7 +133,7 @@ public class Agent : MonoBehaviour
         if(collision.CompareTag("Pipe"))
         {
             score++;
-            population.SetScore(score);
+            //population.SetScore(score);
         }
     }
 
