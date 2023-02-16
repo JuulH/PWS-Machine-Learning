@@ -17,7 +17,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
 
     private int[] activations;
 
-    private float fitness;
+    public float fitness;
     private int id;
 
     public NeuralNetwork(int[] layers)

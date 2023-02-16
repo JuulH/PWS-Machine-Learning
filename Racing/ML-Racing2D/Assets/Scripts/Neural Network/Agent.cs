@@ -14,25 +14,30 @@ public class Agent : MonoBehaviour
     [SerializeField] private int[] layers;
 
     private float timeAlive;
+    private float timeSinceTarget;
 
     private SpriteRenderer body;
     [SerializeField] public bool dead = false;
 
-    private int score;
+    private float fitness;
 
     private int borderLayer;
-    [SerializeField] private int numRays = 5;
-    [SerializeField] private float maxAngle = 90f;
+    [SerializeField] public int numRays = 5;
+    [SerializeField] public float maxAngle = 90f;
     private float spreadAngle;
     [SerializeField] private LineRenderer line;
 
     [SerializeField] private Vector2 startPos;
+    [SerializeField] private int ctarget = 0;
+    [SerializeField] private int target = 0;
+
+    private int maxTargets = 25;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        score = 0;
+        car = GetComponent<TopDownCarController>();
         dead = false;
         timeAlive = 0f;
 
@@ -41,10 +46,9 @@ public class Agent : MonoBehaviour
 
         line.positionCount = numRays * 2;
 
-        car = GetComponent<TopDownCarController>();
-        inputs = new float[numRays];
-        layers[0] = numRays;
-        network = new NeuralNetwork(layers);
+        inputs = new float[layers[0]];
+
+        float[] output = new float[layers[3]];
     }
 
     // Update is called once per frame
@@ -52,8 +56,7 @@ public class Agent : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            transform.position = startPos;
-            network = new NeuralNetwork(layers);
+            Reset();
         }
 
         if (!dead)
@@ -85,7 +88,7 @@ public class Agent : MonoBehaviour
                 }
             }
 
-            Debug.LogFormat("0: {0} - 1: {1} - 2: {2} - 3: {3} - 4: {4}", inputs[0], inputs[1], inputs[2], inputs[3], inputs[4]);
+            //Debug.LogFormat("0: {0} - 1: {1} - 2: {2} - 3: {3} - 4: {4}", inputs[0], inputs[1], inputs[2], inputs[3], inputs[4]);
 
             float[] output = network.FeedForward(inputs);
 
@@ -95,23 +98,19 @@ public class Agent : MonoBehaviour
             car.SetInputVector(inputVector);
 
             timeAlive += Time.deltaTime;
-            //network.SetFitness(timeAlive + score);
+            timeSinceTarget += Time.deltaTime;
+            Debug.Log(network.fitness);
         } else
         {
             //visionLine.enabled = false;
         }
     }
 
-    public void ResetAgent()
-    {
-        // test
-    }
-
     public void InitAgent(NeuralNetwork nn, int i)
     {
-        //this.network = nn;
+        this.network = nn;
         this.id = i;
-        gameObject.transform.name = "Bird " + i;
+        gameObject.transform.name = "Car " + i;
     }
 
     public void SetInput(int i, float value)
@@ -121,28 +120,48 @@ public class Agent : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //dead = true;
-        //this.gameObject.SetActive(false);
-
-        transform.position = startPos;
-        network = new NeuralNetwork(layers);
+        dead = true;
+        this.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Pipe"))
+        if (collision.CompareTag("Target"))
         {
-            score++;
-            //population.SetScore(score);
+            target = int.Parse(collision.gameObject.name);
+            float multiplier = 1 / (timeSinceTarget + 1);
+            if (target == ctarget + 1)
+            {
+                timeSinceTarget = 0;
+                ctarget = target;
+                network.fitness += 1 * multiplier;
+            }
+            else
+            {
+                network.fitness -= 1 * multiplier;
+                timeSinceTarget = 0;
+            }
+
+            Debug.Log("Hit target! " + target + ", Multiplier: " + multiplier + ", Fitness: " + network.fitness);
+
+            if (ctarget >= maxTargets)
+            {
+                ctarget = 0;
+                target = 0;
+                timeAlive = 0f;
+            }
         }
     }
 
-    public void ResetBird()
+    public void Reset()
     {
-        transform.position = new Vector2(0, 0);
+        transform.position = startPos;
         transform.rotation = Quaternion.identity;
-        dead = false;
         timeAlive = 0f;
-        score = 0;
+        timeSinceTarget = 0f;
+        ctarget = 0;
+        target = 0;
+        dead = false;
+        car.Reset();
     }
 }
