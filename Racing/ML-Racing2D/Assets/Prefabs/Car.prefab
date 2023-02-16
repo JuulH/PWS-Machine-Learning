@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3792885035392200848}
   - component: {fileID: 3792885035392200863}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,9 +95,9 @@ GameObject:
   - component: {fileID: 3792885035569989879}
   - component: {fileID: 3792885035569989832}
   - component: {fileID: 3792885035569989876}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Car
-  m_TagString: Untagged
+  m_TagString: Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -30,9 +30,9 @@ public class Population : MonoBehaviour
     //[SerializeField] private StatsManager stats;
 
     // Mutation
-    private float elitistPercentage = 0.1f;
-    private float crossoverPercentage = 0.25f;
-    private float mutationPercentage = 0.65f;
+    [SerializeField] private float elitistPercentage = 0.1f;
+    [SerializeField] private float crossoverPercentage = 0.25f;
+    [SerializeField] private float mutationPercentage = 0.65f;
 
     [SerializeField] private bool trackFittest;
 
@@ -43,10 +43,13 @@ public class Population : MonoBehaviour
     [SerializeField] private int numRays = 5;
     [SerializeField] private float maxAngle = 90f;
     private float spreadAngle;
+    [SerializeField] private Vector2 startPos;
 
     // Start is called before the first frame update
     void Start()
     {
+        layers[0] = numRays;
+
         InitNetworks();
         //stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns().ToString());
         //stats.UpdateRuns();
@@ -175,7 +178,7 @@ public class Population : MonoBehaviour
             network.SetID(i);
             networks.Add(network);
 
-            Agent car = Instantiate(agentPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Agent>();
+            Agent car = Instantiate(agentPrefab, startPos, Quaternion.identity).GetComponent<Agent>();
             car.numRays = numRays;
             car.maxAngle = maxAngle;
             car.InitAgent(network, i);

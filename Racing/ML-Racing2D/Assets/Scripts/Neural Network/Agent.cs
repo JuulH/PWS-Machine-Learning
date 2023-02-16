@@ -19,8 +19,6 @@ public class Agent : MonoBehaviour
     private SpriteRenderer body;
     [SerializeField] public bool dead = false;
 
-    private float fitness;
-
     private int borderLayer;
     [SerializeField] public int numRays = 5;
     [SerializeField] public float maxAngle = 90f;
@@ -33,11 +31,9 @@ public class Agent : MonoBehaviour
 
     private int maxTargets = 25;
 
-
     // Start is called before the first frame update
     void Start()
     {
-        car = GetComponent<TopDownCarController>();
         dead = false;
         timeAlive = 0f;
 
@@ -45,10 +41,9 @@ public class Agent : MonoBehaviour
         spreadAngle = maxAngle / (numRays - 1);
 
         line.positionCount = numRays * 2;
-
-        inputs = new float[layers[0]];
-
-        float[] output = new float[layers[3]];
+        car = GetComponent<TopDownCarController>();
+        body = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        body.color = Random.ColorHSV();
     }
 
     // Update is called once per frame
@@ -111,6 +106,8 @@ public class Agent : MonoBehaviour
         this.network = nn;
         this.id = i;
         gameObject.transform.name = "Car " + i;
+
+        inputs = new float[network.layers[0]];
     }
 
     public void SetInput(int i, float value)
@@ -120,8 +117,11 @@ public class Agent : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        dead = true;
-        this.gameObject.SetActive(false);
+        if (collision.gameObject.CompareTag("Border"))
+        {
+            dead = true;
+            this.gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
