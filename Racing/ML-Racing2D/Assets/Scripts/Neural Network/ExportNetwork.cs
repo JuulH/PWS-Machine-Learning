@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ExportNetwork : MonoBehaviour
+public class ExportNetwork
 {
     public int[] layers;
     public float[][] neurons;

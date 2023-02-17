@@ -94,13 +94,13 @@ public class Agent : MonoBehaviour
             float[] output = network.FeedForward(inputs);
 
             Vector2 inputVector = new Vector2(output[0], output[1]);
-            Debug.DrawLine(transform.position, inputVector, Color.green);
+            Debug.DrawLine(transform.position, (Vector2) transform.position + inputVector, Color.green);
 
             car.SetInputVector(inputVector);
 
             timeAlive += Time.deltaTime;
             timeSinceTarget += Time.deltaTime;
-            Debug.Log(network.fitness);
+            //Debug.Log(network.fitness);
         } else
         {
             //visionLine.enabled = false;
@@ -152,7 +152,7 @@ public class Agent : MonoBehaviour
                 network.fitness -= 1 * multiplier;
             }
 
-            Debug.Log("Hit target! " + target + ", Multiplier: " + multiplier + ", Fitness: " + network.fitness);
+            //Debug.Log("Hit target! " + target + ", Multiplier: " + multiplier + ", Fitness: " + network.fitness);
 
             // Completed a lap
             if (ctarget >= maxTargets)

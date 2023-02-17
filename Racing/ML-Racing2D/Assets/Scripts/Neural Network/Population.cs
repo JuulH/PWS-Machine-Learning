@@ -27,7 +27,7 @@ public class Population : MonoBehaviour
     private List<NeuralNetwork> networks;
     private List<GameObject> cars;
 
-    //[SerializeField] private StatsManager stats;
+    [SerializeField] private StatsManager stats;
 
     // Mutation
     [SerializeField] private float elitistPercentage = 0.1f;
@@ -51,8 +51,8 @@ public class Population : MonoBehaviour
         layers[0] = numRays;
 
         InitNetworks();
-        //stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns().ToString());
-        //stats.UpdateRuns();
+        stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns());
+        stats.UpdateRuns();
     }
 
     // Update is called once per frame
@@ -119,6 +119,8 @@ public class Population : MonoBehaviour
                 networks.Sort();
                 lastFitness = networks[0].GetFitness();
 
+                stats.SaveNetwork(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns(), networks[0].layers, networks[0].neurons, networks[0].biases, networks[0].weights);
+
                 if (lastFitness > recordFitness) recordFitness = lastFitness;
 
                 float tally = 0f;
@@ -130,7 +132,7 @@ public class Population : MonoBehaviour
 
                 Debug.LogFormat("Generation {0} - Fitness: {1}, Average Fitness: {2}", generation, lastFitness, averageFitness);
 
-                //stats.Write(new float[] {generation, lastFitness, averageFitness, currentScore, runtime});
+                stats.WriteCSV(new float[] {generation, lastFitness, averageFitness, runtime});
 
                 MutateNetworks();
                 ResetNetworks();

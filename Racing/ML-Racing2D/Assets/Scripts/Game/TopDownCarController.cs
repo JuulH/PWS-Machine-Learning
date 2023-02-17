@@ -125,7 +125,6 @@ public class TopDownCarController : MonoBehaviour
         return carRigidbody2D.velocity.magnitude;
     }
 
-
     public void Reset()
     {
         carRigidbody2D.velocity = Vector2.zero;

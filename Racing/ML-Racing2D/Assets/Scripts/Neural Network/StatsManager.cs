@@ -17,14 +17,24 @@ public class StatsManager : MonoBehaviour
     void Start()
     {
         fileName = Application.dataPath + "/Data/" + fileName + ".csv";
+        jsonFile = Application.dataPath + "/Data/" + jsonFile + ".json";
     }
 
     public int GetRuns()
     {
-        string countFile = Application.dataPath + "/Data/" + runCountFile + ".txt";
-        StreamReader reader = new StreamReader(countFile);
-        int runs = int.Parse(reader.ReadLine());
-        reader.Close();
+        int runs = 0;
+        try
+        {
+            string countFile = Application.dataPath + "/Data/" + runCountFile + ".txt";
+            StreamReader reader = new StreamReader(countFile);
+            runs = int.Parse(reader.ReadLine());
+            reader.Close();
+        } catch (FileNotFoundException)
+        {
+            TextWriter tw = new StreamWriter(fileName, false);
+            tw.WriteLine(string.Join(";", columns));
+        }
+
         return runs;
     }
 
@@ -36,6 +46,16 @@ public class StatsManager : MonoBehaviour
         StreamWriter writer = new StreamWriter(countFile);
         writer.Write(runs + 1);
         writer.Close();
+    }
+
+    public void SaveNetwork(string name, int[] layers, float[][] neurons, float[][] biases, float[][][] weights)
+    {
+        exportNN = new ExportNetwork(layers, neurons, biases, weights);
+
+        string jsonData = JsonUtility.ToJson(exportNN);
+
+        jsonFile = Application.dataPath + "/Data/" + name + ".json";
+        File.AppendAllText(jsonFile, jsonData + "\n");
     }
 
     public void CreateCSV(string name)
@@ -53,7 +73,7 @@ public class StatsManager : MonoBehaviour
         }
     }
 
-    public void Write(float[] data)
+    public void WriteCSV(float[] data)
     {
         TextWriter tw = new StreamWriter(fileName, true);
 
