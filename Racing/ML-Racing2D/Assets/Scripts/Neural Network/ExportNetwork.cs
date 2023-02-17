@@ -10,7 +10,6 @@ public class ExportNetwork
     public float[][] biases;
     public float[][][] weights;
 
-
     public ExportNetwork(int[] _layers, float[][] _neurons, float[][] _biases, float[][][] _weights)
     {
         this.layers = _layers;

@@ -1,18 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Newtonsoft.Json;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class NeuralNetwork : IComparable<NeuralNetwork>
 {
 
-    public int[] layers;
-    public float[][] neurons;
+    [JsonProperty] public int[] layers;
+    [JsonProperty] public float[][] neurons;
     // [LAYER][NODE]
 
-    public float[][] biases;
+    [JsonProperty] public float[][] biases;
     // [LAYER][NODE]
 
-    public float[][][] weights;
+    [JsonProperty] public float[][][] weights;
     // [LAYER][NODE][WEIGHT/PREVNEURON]
 
     private int[] activations;
@@ -156,6 +158,14 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
     public float GetInput(int i)
     {
         return neurons[0][i];
+    }
+
+    public void SetParams(int[] _layers, float[][] _neurons, float[][] _biases, float[][][] _weights)
+    {
+        layers = _layers;
+        neurons = _neurons;
+        biases = _biases;
+        weights = _weights;
     }
 
     //Comparing performance between networks

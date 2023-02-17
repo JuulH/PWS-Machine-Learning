@@ -30,6 +30,9 @@ public class Agent : MonoBehaviour
     [SerializeField] private int target = 0;
     [SerializeField] private float targetThreshold; // Max time between targets
 
+    public int numLaps = 0;
+    public int maxLaps = 0;
+
     private int maxTargets = 25;
 
     // Start is called before the first frame update
@@ -107,13 +110,15 @@ public class Agent : MonoBehaviour
         }
     }
 
-    public void InitAgent(NeuralNetwork nn, int i)
+    public void InitAgent(NeuralNetwork nn, int i, int _maxLaps)
     {
         this.network = nn;
         this.id = i;
         gameObject.transform.name = "Car " + i;
 
         inputs = new float[network.layers[0]];
+
+        maxLaps = _maxLaps;
     }
 
     public void SetInput(int i, float value)
@@ -159,8 +164,12 @@ public class Agent : MonoBehaviour
             {
                 ctarget = 0;
                 target = 0;
-                timeAlive = 0f;
-                KillAgent();
+                numLaps++;
+                if (numLaps >= maxLaps)
+                {
+                    timeAlive = 0f;
+                    KillAgent();
+                }
             }
         }
     }
@@ -175,6 +184,7 @@ public class Agent : MonoBehaviour
         target = 0;
         dead = false;
         network.fitness = 0;
+        numLaps = 0;
         car.Reset();
     }
 }

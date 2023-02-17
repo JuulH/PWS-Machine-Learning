@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 using System.IO;
 
 public class StatsManager : MonoBehaviour
@@ -52,10 +53,30 @@ public class StatsManager : MonoBehaviour
     {
         exportNN = new ExportNetwork(layers, neurons, biases, weights);
 
-        string jsonData = JsonUtility.ToJson(exportNN);
+        string jsonData = JsonConvert.SerializeObject(exportNN);
+
+        jsonFile = Application.dataPath + "/Data/" + name + ".json";
+        File.WriteAllText(jsonFile, jsonData + "\n");
+    }
+    
+    public void AppendNetwork(string name, int[] layers, float[][] neurons, float[][] biases, float[][][] weights)
+    {
+        exportNN = new ExportNetwork(layers, neurons, biases, weights);
+
+        string jsonData = JsonConvert.SerializeObject(exportNN);
 
         jsonFile = Application.dataPath + "/Data/" + name + ".json";
         File.AppendAllText(jsonFile, jsonData + "\n");
+    }
+
+    public NeuralNetwork LoadNetwork(string name)
+    {
+        string path = Application.dataPath + "/Data/" + name + ".json";
+        string json = File.ReadAllText(path);
+        ExportNetwork data = JsonConvert.DeserializeObject<ExportNetwork>(json);
+        NeuralNetwork network = new NeuralNetwork(data.layers);
+        network.SetParams(data.layers, data.neurons, data.biases, data.weights);
+        return network;
     }
 
     public void CreateCSV(string name)

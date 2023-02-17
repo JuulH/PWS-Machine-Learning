@@ -45,14 +45,32 @@ public class Population : MonoBehaviour
     private float spreadAngle;
     [SerializeField] private Vector2 startPos;
 
+    [SerializeField] private bool loadNetwork = false;
+    [SerializeField] private string loadNetworkName;
+    [SerializeField] private int maxLaps = 1;
+
     // Start is called before the first frame update
     void Start()
     {
         layers[0] = numRays;
 
-        InitNetworks();
         stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns());
         stats.UpdateRuns();
+
+        if(loadNetwork)
+        {
+            NeuralNetwork loadedNetwork = stats.LoadNetwork(loadNetworkName);
+            networks = new List<NeuralNetwork>();
+            cars = new List<GameObject>();
+            Agent car = Instantiate(agentPrefab, startPos, Quaternion.identity).GetComponent<Agent>();
+            car.numRays = numRays;
+            car.maxAngle = maxAngle;
+            car.InitAgent(loadedNetwork, 0, maxLaps);
+            cars.Add(car.gameObject);
+        } else
+        {
+            InitNetworks();
+        }
     }
 
     // Update is called once per frame
@@ -183,7 +201,7 @@ public class Population : MonoBehaviour
             Agent car = Instantiate(agentPrefab, startPos, Quaternion.identity).GetComponent<Agent>();
             car.numRays = numRays;
             car.maxAngle = maxAngle;
-            car.InitAgent(network, i);
+            car.InitAgent(network, i, maxLaps);
             cars.Add(car.gameObject);
         }
     }
