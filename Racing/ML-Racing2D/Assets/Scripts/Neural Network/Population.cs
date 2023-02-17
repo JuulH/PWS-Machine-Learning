@@ -54,8 +54,8 @@ public class Population : MonoBehaviour
     {
         layers[0] = numRays;
 
-        stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns());
         stats.UpdateRuns();
+        stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns());
 
         if(loadNetwork)
         {
@@ -88,26 +88,18 @@ public class Population : MonoBehaviour
             Time.timeScale = timeScale;
         }
 
-        //if (Input.GetKeyDown(KeyCode.Return))
-        //{
-        //    trackFittest = !trackFittest;
-        //    if (trackFittest)
-        //    {
-        //        foreach (GameObject bird in birds)
-        //        {
-        //            if (!bird.activeInHierarchy) continue;
-
-        //            bird.transform.GetChild(0).gameObject.SetActive(false);
-        //            birds[networks[0].GetID()].transform.GetChild(0).gameObject.SetActive(true);
-        //        }
-        //    } else
-        //    {
-        //        foreach (GameObject bird in birds)
-        //        {
-        //            bird.transform.GetChild(0).gameObject.SetActive(true);
-        //        }
-        //    }
-        //}
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            trackFittest = !trackFittest;
+            if (!trackFittest)
+            {
+                foreach (GameObject car in cars)
+                {
+                    car.transform.GetChild(0).gameObject.SetActive(true);
+                    car.transform.GetChild(1).gameObject.SetActive(true);
+                }
+            }
+        }
 
         agents = GameObject.FindGameObjectsWithTag("Agent");
         alive = agents.Length;
@@ -116,20 +108,26 @@ public class Population : MonoBehaviour
 
         if(training)
         {
-            //if(trackFittest)
-            //{
-            //    if (!birds[networks[0].GetID()].activeInHierarchy)
-            //    {
-            //        foreach (GameObject bird in birds)
-            //        {
-            //            if (bird.activeInHierarchy)
-            //            {
-            //                bird.transform.GetChild(0).gameObject.SetActive(true);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
+            if (trackFittest)
+            {
+                float highest = -999;
+                int fittestNetwork = 0;
+                foreach (NeuralNetwork network in networks)
+                {
+                    if (network.fitness > highest && cars[network.GetID()].activeInHierarchy)
+                    {
+                        fittestNetwork = network.GetID();
+                        highest = network.fitness;
+                    }
+                }
+                foreach (GameObject car in cars)
+                {
+                    car.transform.GetChild(0).gameObject.SetActive(false);
+                    car.transform.GetChild(1).gameObject.SetActive(false);
+                }
+                cars[fittestNetwork].transform.GetChild(0).gameObject.SetActive(true);
+                cars[fittestNetwork].transform.GetChild(1).gameObject.SetActive(true);
+            }
 
             if (alive <= 0)
             {
@@ -154,15 +152,6 @@ public class Population : MonoBehaviour
 
                 MutateNetworks();
                 ResetNetworks();
-
-                //if (trackFittest)
-                //{
-                //    foreach (GameObject bird in birds)
-                //    {
-                //        bird.transform.GetChild(0).gameObject.SetActive(false);
-                //    }
-                //    birds[networks[0].GetID()].transform.GetChild(0).gameObject.SetActive(true);
-                //}
 
                 // Data
                 generation++;

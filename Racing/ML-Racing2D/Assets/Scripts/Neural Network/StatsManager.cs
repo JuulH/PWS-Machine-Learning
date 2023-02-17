@@ -17,8 +17,8 @@ public class StatsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fileName = Application.dataPath + "/Data/" + fileName + ".csv";
-        jsonFile = Application.dataPath + "/Data/" + jsonFile + ".json";
+        //fileName = Application.dataPath + "/Data/" + fileName + ".csv";
+        //jsonFile = Application.dataPath + "/Data/" + jsonFile + ".json";
     }
 
     public int GetRuns()
@@ -32,8 +32,10 @@ public class StatsManager : MonoBehaviour
             reader.Close();
         } catch (FileNotFoundException)
         {
-            TextWriter tw = new StreamWriter(fileName, false);
-            tw.WriteLine(string.Join(";", columns));
+            string countFile = Application.dataPath + "/Data/" + runCountFile + ".txt";
+            TextWriter tw = new StreamWriter(countFile, false);
+            tw.WriteLine("0");
+            tw.Close();
         }
 
         return runs;

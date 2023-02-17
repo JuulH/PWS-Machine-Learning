@@ -24,6 +24,7 @@ public class Agent : MonoBehaviour
     [SerializeField] public float maxAngle = 90f;
     private float spreadAngle;
     [SerializeField] private LineRenderer line;
+    [SerializeField] private LineRenderer dirLine;
 
     [SerializeField] private Vector2 startPos;
     [SerializeField] private int ctarget = 0;
@@ -98,6 +99,7 @@ public class Agent : MonoBehaviour
 
             Vector2 inputVector = new Vector2(output[0], output[1]);
             Debug.DrawLine(transform.position, (Vector2) transform.position + inputVector, Color.green);
+            dirLine.SetPosition(1, inputVector);
 
             car.SetInputVector(inputVector);
 
