@@ -49,6 +49,10 @@ public class Population : MonoBehaviour
     [SerializeField] private string loadNetworkName;
     [SerializeField] private int maxLaps = 1;
 
+    [SerializeField] private VisualizeNetwork visualize;
+    [SerializeField] private GameObject visualization;
+    [SerializeField] private bool showVisualization;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +75,8 @@ public class Population : MonoBehaviour
         {
             InitNetworks();
         }
+
+        visualize.CreateNetwork(layers);
     }
 
     // Update is called once per frame
@@ -101,6 +107,13 @@ public class Population : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            showVisualization = !showVisualization;
+            visualization.SetActive(showVisualization);
+            statsText.enabled = !showVisualization;
+        }
+
         agents = GameObject.FindGameObjectsWithTag("Agent");
         alive = agents.Length;
 
@@ -108,6 +121,9 @@ public class Population : MonoBehaviour
 
         if(training)
         {
+
+            if (showVisualization) visualize.UpdateNetwork(networks[0].neurons, networks[0].weights);
+
             if (trackFittest)
             {
                 float highest = -999;
