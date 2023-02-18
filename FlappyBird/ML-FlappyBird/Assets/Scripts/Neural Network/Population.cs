@@ -6,17 +6,32 @@ using System;
 
 public class Population : MonoBehaviour
 {
-
+    [Header("Setup")]
     [SerializeField] private bool training;
-
     [SerializeField] private int populationSize;
     [SerializeField] private int generation;
     [SerializeField] private int alive;
 
     private GameObject[] agents;
-
     [SerializeField] private GameObject agentPrefab;
 
+    // Neural network config
+    [SerializeField] private int[] layers = new int[] { 6, 8, 8, 1 };
+    private List<NeuralNetwork> networks;
+    private List<GameObject> birds;
+    [SerializeField] private PipeSpawner pipe;
+
+    [Header("Training")]
+    // Mutation
+    [SerializeField] private float elitistPercentage = 0.1f;
+    [SerializeField] private float crossoverPercentage = 0.25f;
+    [SerializeField] private float mutationPercentage = 0.65f;
+
+    [SerializeField] private bool trackFittest;
+    [SerializeField] private float timeScale;
+
+    [Header("Data")]
+    [SerializeField] private StatsManager stats;
     [SerializeField] private TMP_Text statsText;
     [SerializeField] private float recordFitness;
     [SerializeField] private float lastFitness;
@@ -24,25 +39,10 @@ public class Population : MonoBehaviour
     [SerializeField] private int highScore;
     [SerializeField] private int currentScore;
     public bool updateScore;
-
-    // Neural network config
-    [SerializeField] private int[] layers = new int[] { 6, 8, 8, 1 };
-    private List<NeuralNetwork> networks;
-    private List<GameObject> birds;
-
-    [SerializeField] private StatsManager stats;
-
-    // Mutation
-    private float elitistPercentage = 0.1f;
-    private float crossoverPercentage = 0.25f;
-    private float mutationPercentage = 0.65f;
-
-    [SerializeField] private PipeSpawner pipe;
-    [SerializeField] private bool trackFittest;
-
-    [SerializeField] private float timeScale;
-
     private float runtime;
+    [SerializeField] private VisualizeNetwork visualize;
+    [SerializeField] private GameObject visualization;
+    [SerializeField] private bool showVisualization;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +51,8 @@ public class Population : MonoBehaviour
         pipe.SetActive();
         stats.CreateCSV(DateTime.Now.ToString("yyyy-MM-dd") + "_" + stats.GetRuns().ToString());
         stats.UpdateRuns();
+
+        visualize.CreateNetwork(layers);
     }
 
     // Update is called once per frame
@@ -89,6 +91,13 @@ public class Population : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            showVisualization = !showVisualization;
+            visualization.SetActive(showVisualization);
+            statsText.enabled = !showVisualization;
+        }
+
         agents = GameObject.FindGameObjectsWithTag("Agent");
         alive = agents.Length;
 
@@ -96,7 +105,9 @@ public class Population : MonoBehaviour
 
         if(training)
         {
-            if(trackFittest)
+            if (showVisualization) visualize.UpdateNetwork(networks[0].neurons, networks[0].weights);
+
+            if (trackFittest)
             {
                 if (!birds[networks[0].GetID()].activeInHierarchy)
                 {

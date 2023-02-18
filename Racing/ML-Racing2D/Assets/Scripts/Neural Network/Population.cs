@@ -6,49 +6,39 @@ using System;
 
 public class Population : MonoBehaviour
 {
-
-    [SerializeField] private bool training;
-
+    [Header("Setup")]
     [SerializeField] private int populationSize;
     [SerializeField] private int generation;
     [SerializeField] private int alive;
-
-    private GameObject[] agents;
-
-    [SerializeField] private GameObject agentPrefab;
-
-    [SerializeField] private TMP_Text statsText;
-    [SerializeField] private float recordFitness;
-    [SerializeField] private float lastFitness;
-    [SerializeField] private float averageFitness;
-
-    // Neural network config
+    private float runtime;
     [SerializeField] private int[] layers = new int[] { 6, 8, 8, 1 };
+    [SerializeField] private GameObject agentPrefab;
+    private GameObject[] agents;
     private List<NeuralNetwork> networks;
     private List<GameObject> cars;
-
-    [SerializeField] private StatsManager stats;
-
-    // Mutation
-    [SerializeField] private float elitistPercentage = 0.1f;
-    [SerializeField] private float crossoverPercentage = 0.25f;
-    [SerializeField] private float mutationPercentage = 0.65f;
-
-    [SerializeField] private bool trackFittest;
-
-    [SerializeField] private float timeScale;
-
-    private float runtime;
-
     [SerializeField] private int numRays = 5;
     [SerializeField] private float maxAngle = 90f;
     private float spreadAngle;
     [SerializeField] private Vector2 startPos;
-
-    [SerializeField] private bool loadNetwork = false;
-    [SerializeField] private string loadNetworkName;
     [SerializeField] private int maxLaps = 1;
 
+    [Header("Training")]
+    // Mutation
+    [SerializeField] private bool training;
+    [SerializeField] private float timeScale;
+    [SerializeField] private float elitistPercentage = 0.1f;
+    [SerializeField] private float crossoverPercentage = 0.25f;
+    [SerializeField] private float mutationPercentage = 0.65f;
+    [SerializeField] private float recordFitness;
+    [SerializeField] private float lastFitness;
+    [SerializeField] private float averageFitness;
+
+    [Header("Data")]
+    [SerializeField] private TMP_Text statsText;
+    [SerializeField] private StatsManager stats;
+    [SerializeField] private bool trackFittest;
+    [SerializeField] private bool loadNetwork = false;
+    [SerializeField] private string loadNetworkName;
     [SerializeField] private VisualizeNetwork visualize;
     [SerializeField] private GameObject visualization;
     [SerializeField] private bool showVisualization;
@@ -67,6 +57,8 @@ public class Population : MonoBehaviour
             networks = new List<NeuralNetwork>();
             cars = new List<GameObject>();
             Agent car = Instantiate(agentPrefab, startPos, Quaternion.identity).GetComponent<Agent>();
+            networks.Add(loadedNetwork);
+            cars.Add(car.gameObject);
             car.numRays = numRays;
             car.maxAngle = maxAngle;
             car.InitAgent(loadedNetwork, 0, maxLaps);
@@ -166,7 +158,7 @@ public class Population : MonoBehaviour
 
                 stats.WriteCSV(new float[] {generation, lastFitness, averageFitness, runtime});
 
-                MutateNetworks();
+                if (!loadNetwork) MutateNetworks();
                 ResetNetworks();
 
                 // Data

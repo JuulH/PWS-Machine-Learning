@@ -7,7 +7,7 @@ public class Agent : MonoBehaviour
 {
 
     private NeuralNetwork network;
-    private float[] inputs = new float[5];
+    private float[] inputs = new float[3];
     int id;
 
     float jumpActivation;

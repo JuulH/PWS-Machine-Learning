@@ -2649,28 +2649,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7489968121b510b46a464850fcbb71ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  training: 1
   populationSize: 100
   generation: 0
   alive: 0
-  agentPrefab: {fileID: 2252188873589841767, guid: ee5db8c3924c72b4890d01a8dbd81eb5, type: 3}
-  statsText: {fileID: 1921289117}
-  recordFitness: 0
-  lastFitness: 0
-  averageFitness: 0
   layers: 05000000080000000800000002000000
-  stats: {fileID: 1683455145}
-  elitistPercentage: 0.1
-  crossoverPercentage: 0.25
-  mutationPercentage: 0.65
-  trackFittest: 0
-  timeScale: 1
+  agentPrefab: {fileID: 2252188873589841767, guid: ee5db8c3924c72b4890d01a8dbd81eb5, type: 3}
   numRays: 8
   maxAngle: 140
   startPos: {x: -10, y: 0}
-  loadNetwork: 0
-  loadNetworkName: 2023-02-17_21
-  maxLaps: 1
+  maxLaps: 4
+  training: 1
+  timeScale: 1
+  elitistPercentage: 0.1
+  crossoverPercentage: 0.25
+  mutationPercentage: 0.65
+  recordFitness: 0
+  lastFitness: 0
+  averageFitness: 0
+  statsText: {fileID: 1921289117}
+  stats: {fileID: 1683455145}
+  trackFittest: 0
+  loadNetwork: 1
+  loadNetworkName: 2023-02-18_73
   visualize: {fileID: 1533914080}
   visualization: {fileID: 1533914079}
   showVisualization: 0
@@ -4295,7 +4295,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15d342f5762c91046bdf46d4db2dec41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layers: 08000000060000000600000002000000
   neuronPrefab: {fileID: 8382851956261049838, guid: c2995ca737a54c143866fa161346411b, type: 3}
   linePrefab: {fileID: 2406851821541757889, guid: a98cf6e07e8215145b97e9f91b5a0b0e, type: 3}
   verticalGap: 1.5
@@ -5648,8 +5647,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 65
-  m_fontSizeBase: 65
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

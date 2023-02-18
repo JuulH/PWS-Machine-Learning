@@ -123,6 +123,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &258378759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 258378761}
+  - component: {fileID: 258378760}
+  m_Layer: 0
+  m_Name: VisualizeNetwork
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &258378760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258378759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c59c19138e7d4e4e8fa43a230facbc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  neuronPrefab: {fileID: 8382851956261049838, guid: ebbfefdec883c5c45867dfa060ca6bbf, type: 3}
+  linePrefab: {fileID: 2406851821541757889, guid: fa8f4b5f9db60824fa13305e233c252a, type: 3}
+  verticalGap: 1.8
+  horizontalGap: 4.8
+--- !u!4 &258378761
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258378759}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +415,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &683060974
 GameObject:
@@ -407,6 +454,7 @@ MonoBehaviour:
   - Score
   - Runtime
   runCountFile: runs
+  jsonFile: 
 --- !u!4 &683060976
 Transform:
   m_ObjectHideFlags: 0
@@ -419,7 +467,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1115387663
 GameObject:
@@ -468,7 +516,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1212562426
 PrefabInstance:
@@ -646,7 +694,7 @@ Transform:
   m_LocalScale: {x: 20, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1783386232
 GameObject:
@@ -731,7 +779,7 @@ Transform:
   - {fileID: 526128759}
   - {fileID: 2048223828}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1783386235
 BoxCollider2D:
@@ -852,7 +900,7 @@ RectTransform:
   m_Children:
   - {fileID: 2053524309}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -893,6 +941,14 @@ MonoBehaviour:
   generation: 0
   alive: 0
   agentPrefab: {fileID: 3013177008083269548, guid: fe9fc9d838f0e8541bfcdcc9556f6b68, type: 3}
+  layers: 03000000050000000500000001000000
+  pipe: {fileID: 1115387664}
+  elitistPercentage: 0.1
+  crossoverPercentage: 0.25
+  mutationPercentage: 0.65
+  trackFittest: 1
+  timeScale: 1
+  stats: {fileID: 683060975}
   statsText: {fileID: 2053524310}
   recordFitness: 0
   lastFitness: 0
@@ -900,11 +956,9 @@ MonoBehaviour:
   highScore: 0
   currentScore: 0
   updateScore: 0
-  layers: 06000000080000000800000001000000
-  stats: {fileID: 683060975}
-  pipe: {fileID: 1115387664}
-  trackFittest: 1
-  timeScale: 1
+  visualize: {fileID: 258378760}
+  visualization: {fileID: 258378759}
+  showVisualization: 0
 --- !u!4 &1952236204
 Transform:
   m_ObjectHideFlags: 0
@@ -1035,7 +1089,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 591.98364, y: -436.8675}
+  m_AnchoredPosition: {x: 591.98364, y: -410.52}
   m_SizeDelta: {x: 1070.6609, y: 724.3492}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2053524310
@@ -1101,8 +1155,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75
-  m_fontSizeBase: 75
+  m_fontSize: 65
+  m_fontSizeBase: 65
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
