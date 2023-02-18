@@ -93,15 +93,6 @@ public class VisualizeNetwork : MonoBehaviour
 
                 SpriteRenderer sprite = neurons[i][j].GetComponent<SpriteRenderer>();
                 sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, alpha);
-
-                //for (int k = 0; k < _neurons[i + 1].Length; k++)
-                //{
-                //    LineRenderer line = weights[i][k][j];
-                //    Color color = line.startColor;
-                //    Color newColor = new Color(color.r, color.g, color.b, alpha);
-                //    line.startColor = newColor;
-                //    line.endColor = newColor;
-                //}
             }
         }
 

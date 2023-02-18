@@ -946,7 +946,7 @@ MonoBehaviour:
   elitistPercentage: 0.1
   crossoverPercentage: 0.25
   mutationPercentage: 0.65
-  trackFittest: 1
+  trackFittest: 0
   timeScale: 1
   stats: {fileID: 683060975}
   statsText: {fileID: 2053524310}

@@ -17,8 +17,6 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
     [JsonProperty] public float[][][] weights;
     // [LAYER][NODE][WEIGHT/PREVNEURON]
 
-    private int[] activations;
-
     public float fitness;
     private int id;
 

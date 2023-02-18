@@ -2654,10 +2654,10 @@ MonoBehaviour:
   alive: 0
   layers: 05000000080000000800000002000000
   agentPrefab: {fileID: 2252188873589841767, guid: ee5db8c3924c72b4890d01a8dbd81eb5, type: 3}
-  numRays: 8
+  numRays: 5
   maxAngle: 140
   startPos: {x: -10, y: 0}
-  maxLaps: 4
+  maxLaps: 1
   training: 1
   timeScale: 1
   elitistPercentage: 0.1
@@ -2669,7 +2669,7 @@ MonoBehaviour:
   statsText: {fileID: 1921289117}
   stats: {fileID: 1683455145}
   trackFittest: 0
-  loadNetwork: 1
+  loadNetwork: 0
   loadNetworkName: 2023-02-18_73
   visualize: {fileID: 1533914080}
   visualization: {fileID: 1533914079}
